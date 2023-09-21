@@ -228,7 +228,7 @@ end
 ....
 ```
 
-> Note: You can also create your own function executor. The return object of `ChatFunctionCall.arguments`` is a `JSON::Any` for simplicity and should be able to help you with that.
+> Note: You can also create your own function executor. The return object of `ChatFunctionCall.arguments` is a `JSON::Any` for simplicity and should be able to help you with that.
 
 ### Adding a Proxy
 
