@@ -1,0 +1,26 @@
+name: openai
+version: 0.9.0
+
+description: |
+  Unofficial Crystal client for OpenAI API. Supports ChatGTP, GTP-3, GPT-4, DALL·E 2, Whisper
+
+authors:
+  - Ali Naqvi <syed.alinaqvi@gmail.com>
+
+crystal: 1.9.2
+
+license: MIT
+
+dependencies:
+  json-schema:
+    github: spider-gazelle/json-schema
+
+  connect-proxy:
+    github: spider-gazelle/connect-proxy
+
+development_dependencies:
+  webmock:
+    github: manastech/webmock.cr
+    branch: master
+  ameba:
+    github: veelenga/ameba

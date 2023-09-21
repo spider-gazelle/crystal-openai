@@ -1,0 +1,4 @@
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Style/QueryBoolMethods:
+  Enabled: false
