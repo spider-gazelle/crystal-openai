@@ -257,7 +257,8 @@ module OpenAI
     end
 
     def execute(call : ChatFunctionCall)
-      raise OpenAIError.new "Function '#{call.name}' not defined." unless func = @map[call.name]?
+      # sometime the chat defines the name: "functions.function_name" so we should check for that case
+      raise OpenAIError.new "Function '#{call.name}' not defined." unless func = @map[call.name]? || @map[call.name.split('.', 2)[-1]]?
       params = call.arguments.as_s? || call.arguments.to_s
       arg = func.first.from_json(params)
       result = func.last.call(arg)
