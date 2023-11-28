@@ -1,4 +1,5 @@
 require "json"
+require "log"
 require "promise"
 require "./usage"
 require "../stream"
@@ -321,6 +322,7 @@ module OpenAI
   # Being able to deal any User defined Types, it requires ADT to extend `OpenAI::FuncMarker` a marker module.
   # And requires Block to accept and return Types as `JSON::Serializable`
   class FunctionExecutor
+    Log = ::Log.for(self)
     alias Callback = JSON::Serializable -> JSON::Serializable
     getter functions : Array(ChatFunction)
     getter tools : Array(ChatTool)
@@ -354,9 +356,15 @@ module OpenAI
           raise OpenAIError.new "OpenAI called unknown function: name: '#{call.function.name}' with #{call.id}'" unless func = @map[call.function.name]? || @map[call.function.name.split('.', 2)[-1]]?
           Promise(ChatMessage).defer(same_thread: true) do
             params = call.function.arguments.as_s? || call.function.arguments.to_s
-            arg = func.first.from_json(params)
-            result = func.last.call(arg)
-            ChatMessage.new(:tool, result.to_pretty_json, call.function.name, tool_call_id: call.id)
+            begin
+              arg = func.first.from_json(params)
+              result = func.last.call(arg)
+              ChatMessage.new(:tool, result.to_pretty_json, call.function.name, tool_call_id: call.id)
+            rescue ex
+              Log.error(exception: ex) { "executing function call #{call.function.name}" }
+              reply = {"body" => "Encountered error while executing function: #{ex.message}"}
+              ChatMessage.new(:tool, reply.to_pretty_json, call.function.name, tool_call_id: call.id)
+            end
           end
         end
       ).get
