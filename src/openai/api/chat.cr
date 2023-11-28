@@ -353,10 +353,12 @@ module OpenAI
       raise OpenAIError.new "OpenAI returned response with no function call details" if calls.empty?
       Promise.all(
         calls.map do |call|
-          raise OpenAIError.new "OpenAI called unknown function: name: '#{call.function.name}' with #{call.id}'" unless func = @map[call.function.name]? || @map[call.function.name.split('.', 2)[-1]]?
           Promise(ChatMessage).defer(same_thread: true) do
-            params = call.function.arguments.as_s? || call.function.arguments.to_s
             begin
+              func = @map[call.function.name]? || @map[call.function.name.split('.', 2)[-1]]?
+              raise OpenAIError.new "Unknown function: '#{call.function.name}'" unless func
+
+              params = call.function.arguments.as_s? || call.function.arguments.to_s
               arg = func.first.from_json(params)
               result = func.last.call(arg)
               ChatMessage.new(:tool, result.to_pretty_json, call.function.name, tool_call_id: call.id)
