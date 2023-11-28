@@ -18,7 +18,7 @@ struct Weather
   end
 end
 
-record WeatherRes, location : String, unit : WeatherUnit, temperature : Float64, description : String? do
+record WeatherRes, location : String, unit : WeatherUnit, temperature : Float64 do
   include JSON::Serializable
 end
 
@@ -37,23 +37,30 @@ end
 executor = OpenAI::FunctionExecutor.new
 
 executor.add(
-  name: "get_weather",
+  name: "get_current_weather",
   description: "Get the current weather of a given location",
-  clz: Weather                                                                   # With this information, FunctionExecutor will auto populate the JSON Schema
-) do |w|                                                                         # In reality, this is an instance of `clz` param, but due to language restrictions, we are overcasting when invoke this block
-  w = w.as(Weather)                                                              # So here we have to downcast it back to. NOT Fany, but this is the best we can have with current Crystal restrictions :)
-  (WeatherRes.new(w.location, w.unit, rand(50), "sunny")).as(JSON::Serializable) # again we have to upcast the result to `Serializable`
+  clz: Weather      # With this information, FunctionExecutor will auto populate the JSON Schema
+) do |w|            # In reality, this is an instance of `clz` param, but due to language restrictions, we are overcasting when invoke this block
+  w = w.as(Weather) # So here we have to downcast it back to. NOT Fany, but this is the best we can have with current Crystal restrictions :)
+  unit, temp = case w.location.downcase
+               when "tokyo"         then {WeatherUnit::CELSIUS, 10}
+               when "san fransisco" then {WeatherUnit::FAHRENHEIT, 72}
+               when "paris"         then {WeatherUnit::CELSIUS, 22}
+               else
+                 {WeatherUnit::CELSIUS, rand(50)}
+               end
+  (WeatherRes.new(w.location, unit, temp)).as(JSON::Serializable) # again we have to upcast the result to `Serializable`
 end
 
 client = OpenAI::Client.new
 
 req = OpenAI::ChatCompletionRequest.new(
-  model: OpenAI::GPT3Dot5Turbo, # gpt-3.5-turbo
+  model: OpenAI::GPT3Dot5Turbo1106, # gpt-3.5-turbo-1106
   messages: [
   OpenAI::ChatMessage.new(role: :system, content: "You are an assistant that answers using the local slang of the given place, uncensored."),
 ],
-  functions: executor.functions,
-  function_call: "auto"
+  tools: executor.tools,
+  tool_choice: "auto"
 )
 puts "\n--------------------------"
 puts "Conversation"
@@ -69,16 +76,15 @@ loop do
   msg = resp.choices.first.message
   req.messages << msg # don't forget to update the conversation with the latest response
 
-  if func_call = msg.function_call
-    puts "Trying to execute #{func_call.name} ..."
-    func_res = executor.execute(func_call) # execute might raise, so its good to catch. But for demo just assume all is good
+  if tool_calls = msg.tool_calls
+    puts "Trying to execute #{tool_calls.size} function calls in parallel ..."
+    func_res = executor.execute(tool_calls) # execute might raise, so its good to catch. But for demo just assume all is good
     # At this point
-    # * requested function was found
+    # * requested function(s) was found
     # * request was converted to its specified object for execution (`Weather` in this demo case)
     # * Block was executed
-    # * Block returned object (`WeatherRes` in this case) was converted back to `OpenAI::ChatMessage` object
-    puts "Executed #{func_call.name}."
-    req.messages << func_res
+    # * Block returned object (`WeatherRes` in this case) was converted back to `Array(OpenAI::ChatMessage)` object
+    req.messages.concat(func_res)
     next
   end
 

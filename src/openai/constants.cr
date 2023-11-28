@@ -46,12 +46,14 @@ module OpenAI
   GPT40613              = "gpt-4-0613"
   GPT40314              = "gpt-4-0314"
   GPT4                  = "gpt-4"
+  GPT41106              = "gpt-4-1106-preview"
   GPT3Dot5Turbo0613     = "gpt-3.5-turbo-0613"
   GPT3Dot5Turbo0301     = "gpt-3.5-turbo-0301"
   GPT3Dot5Turbo16K      = "gpt-3.5-turbo-16k"
   GPT3Dot5Turbo16K0613  = "gpt-3.5-turbo-16k-0613"
   GPT3Dot5Turbo         = "gpt-3.5-turbo"
   GPT3Dot5TurboInstruct = "gpt-3.5-turbo-instruct"
+  GPT3Dot5Turbo1106     = "gpt-3.5-turbo-1106"
 
   # Deprecated: Will be shut down on January 04, 2024. Use gpt-3.5-turbo-instruct instead.
   GPT3TextDavinci003 = "text-davinci-003"
@@ -101,12 +103,14 @@ module OpenAI
       GPT3Dot5Turbo0613,
       GPT3Dot5Turbo16K,
       GPT3Dot5Turbo16K0613,
+      GPT3Dot5Turbo1106,
       GPT4,
       GPT40314,
       GPT40613,
       GPT432K,
       GPT432K0314,
       GPT432K0613,
+      GPT41106,
     ],
     "/chat/completions" => [
       CodexCodeDavinci002,

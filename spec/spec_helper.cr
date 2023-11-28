@@ -95,6 +95,7 @@ CHAT_COMPLETION_RES = <<-JSON
 	"object": "chat.completion",
 	"created": 1677652288,
 	"model": "gpt-3.5-turbo-0613",
+  "system_fingerprint": "fp_44709d6fcb",
 	"choices": [{
 		"index": 0,
 		"message": {

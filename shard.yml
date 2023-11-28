@@ -1,5 +1,5 @@
 name: openai
-version: 0.9.0
+version: 0.9.1
 
 description: |
   Unofficial Crystal client for OpenAI API. Supports ChatGTP, GTP-3, GPT-4, DALL·E 2, Whisper
@@ -17,6 +17,9 @@ dependencies:
 
   connect-proxy:
     github: spider-gazelle/connect-proxy
+
+  promise:
+    github: spider-gazelle/promise
 
 development_dependencies:
   webmock:
