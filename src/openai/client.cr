@@ -352,6 +352,8 @@ module OpenAI
         end
       rescue ex : APIError
         raise ex
+      rescue ex : JSON::ParseException
+        raise RequestError.new(resp.status_code, Exception.new(resp.body))
       rescue e
         raise RequestError.new(resp.status_code, e)
       end

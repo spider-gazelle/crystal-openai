@@ -32,8 +32,8 @@ module OpenAI
         If your API key is stored in a file, set the environment variable OPENAI_API_KEY_PATH=<PATH>
         You can generate API keys in the OpenAI web interface. See https://platform.openai.com/account/api-keys for details.
       MSG
-    ) unless result
-    result
+    ) unless result || API_BASE
+    result || ""
   end
 
   # GPT3 Defines the models provided by OpenAI to use when generating

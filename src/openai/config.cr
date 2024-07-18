@@ -59,7 +59,8 @@ module OpenAI
       end
 
       def req_headers
-        result = [api_type.to_header(api_key)]
+        result = [] of Tuple(String, String)
+        result << api_type.to_header(api_key) unless api_key.blank?
         result << {"OpenAI-Organization", org_id} unless org_id.blank?
         result
       end
