@@ -353,7 +353,7 @@ module OpenAI
       raise OpenAIError.new "OpenAI returned response with no function call details" if calls.empty?
       Promise.all(
         calls.map do |call|
-          Promise(ChatMessage).defer(same_thread: true) do
+          Promise(ChatMessage).defer do
             begin
               func = @map[call.function.name]? || @map[call.function.name.split('.', 2)[-1]]?
               raise OpenAIError.new "Unknown function: '#{call.function.name}'" unless func
