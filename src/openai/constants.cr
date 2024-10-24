@@ -5,7 +5,7 @@ module OpenAI
   API_KEY                = ENV["OPENAI_API_KEY"]?
   API_KEY_PATH           = ENV["OPENAI_API_KEY_PATH"]?
   ORGANIZATION           = ENV["OPENAI_ORGANIZATION"]? || ""
-  OPENAI_API_DEFUALT_URL = "https://api.openai.com/v1"
+  OPENAI_API_DEFAULT_URL = "https://api.openai.com/v1"
   API_BASE               = ENV["OPENAI_API_BASE"]?
   API_TYPE               = ApiType.parse(ENV["OPENAI_API_TYPE"]? || "open_ai")
   API_VERSION            = ENV["OPENAI_API_VERSION"]? || begin

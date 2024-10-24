@@ -6,7 +6,7 @@ module OpenAI
     it "test create fine-tuning job" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/fine_tuning/jobs")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/fine_tuning/jobs")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: FINE_TUNING_JOB)
 
@@ -19,7 +19,7 @@ module OpenAI
     it "test list fine-tuning jobs" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:get, "#{OPENAI_API_DEFUALT_URL}/fine_tuning/jobs?limit=20")
+        WebMock.stub(:get, "#{OPENAI_API_DEFAULT_URL}/fine_tuning/jobs?limit=20")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: FINE_TUNING_JOB_LIST)
 
@@ -31,7 +31,7 @@ module OpenAI
     it "test retrieve fine-tuning job" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:get, "#{OPENAI_API_DEFUALT_URL}/fine_tuning/jobs/ft-AF1WoRqd3aJAHsqc9NY7iL8F")
+        WebMock.stub(:get, "#{OPENAI_API_DEFAULT_URL}/fine_tuning/jobs/ft-AF1WoRqd3aJAHsqc9NY7iL8F")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: FINE_TUNING_JOB_RET)
 
@@ -44,7 +44,7 @@ module OpenAI
     it "test cancel fine-tuning job" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/fine_tuning/jobs/ft-AF1WoRqd3aJAHsqc9NY7iL8F/cancel")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/fine_tuning/jobs/ft-AF1WoRqd3aJAHsqc9NY7iL8F/cancel")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: FINE_TUNING_JOB)
 
@@ -57,7 +57,7 @@ module OpenAI
     it "test list fine-tuning events" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:get, "#{OPENAI_API_DEFUALT_URL}/fine_tuning/jobs/ft-AF1WoRqd3aJAHsqc9NY7iL8F/events?limit=20&after=5")
+        WebMock.stub(:get, "#{OPENAI_API_DEFAULT_URL}/fine_tuning/jobs/ft-AF1WoRqd3aJAHsqc9NY7iL8F/events?limit=20&after=5")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: FINE_TUNING_EVENTS_LIST)
 

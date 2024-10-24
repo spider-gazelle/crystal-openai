@@ -48,7 +48,7 @@ module OpenAI
 
       def self.default(api_key : String? = nil, proxy = nil)
         key = api_key || OpenAI.default_apikey
-        new(key, API_BASE || OPENAI_API_DEFUALT_URL, ORGANIZATION, :open_ai, proxy: proxy)
+        new(key, API_BASE || OPENAI_API_DEFAULT_URL, ORGANIZATION, :open_ai, proxy: proxy)
       end
 
       def self.azure(api_key : String?, api_base : String?, api_type : ApiType = :azure, model_mapper : Proc(String, String)? = nil, proxy = nil)

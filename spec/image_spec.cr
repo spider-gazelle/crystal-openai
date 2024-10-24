@@ -6,7 +6,7 @@ module OpenAI
     it "test create image" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/images/generations")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/images/generations")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: IMAGE_RES)
 
@@ -20,7 +20,7 @@ module OpenAI
       client = Client.new(TEST_SECRET)
       parts = ["image", "mask", "prompt", "n", "size", "response_format"]
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/images/edits")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/images/edits")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return do |req|
             HTTP::FormData.parse(req) do |part|
@@ -40,7 +40,7 @@ module OpenAI
       client = Client.new(TEST_SECRET)
       parts = ["image", "n", "size", "response_format"]
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/images/variations")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/images/variations")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return do |req|
             HTTP::FormData.parse(req) do |part|

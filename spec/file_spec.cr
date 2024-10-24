@@ -7,7 +7,7 @@ module OpenAI
       client = Client.new(TEST_SECRET)
       parts = ["file", "purpose"]
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/files")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/files")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return do |req|
             HTTP::FormData.parse(req) do |part|
@@ -25,7 +25,7 @@ module OpenAI
     it "test delete file" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:delete, "#{OPENAI_API_DEFUALT_URL}/files/file-abc123")
+        WebMock.stub(:delete, "#{OPENAI_API_DEFAULT_URL}/files/file-abc123")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: FILE_DEL_RES)
 
@@ -37,7 +37,7 @@ module OpenAI
     it "test list files" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:get, "#{OPENAI_API_DEFUALT_URL}/files")
+        WebMock.stub(:get, "#{OPENAI_API_DEFAULT_URL}/files")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: FILE_LIST_RES)
 
@@ -50,7 +50,7 @@ module OpenAI
       client = Client.new(TEST_SECRET)
       body = File.read(AUDIO_SAMPLE)
       WebMock.wrap do
-        WebMock.stub(:get, "#{OPENAI_API_DEFUALT_URL}/files/file-abc123/content")
+        WebMock.stub(:get, "#{OPENAI_API_DEFAULT_URL}/files/file-abc123/content")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: body)
 

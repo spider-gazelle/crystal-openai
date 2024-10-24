@@ -24,7 +24,7 @@ module OpenAI
     it "should return valid completion response" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/completions")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/completions")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: COMPLETION_RES)
 
@@ -59,7 +59,7 @@ module OpenAI
           ),
         ]
         WebMock.wrap do
-          WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/completions")
+          WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/completions")
             .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
             .to_return do |req|
               headers = HTTP::Headers.new.merge!({"Content-Type" => "text/event-stream"})
@@ -94,7 +94,7 @@ module OpenAI
       it "test completion streaming error without data prefix" do
         client = Client.new(TEST_SECRET)
         WebMock.wrap do
-          WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/completions")
+          WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/completions")
             .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
             .to_return do |req|
               headers = HTTP::Headers.new.merge!({"Content-Type" => "text/event-stream"})
@@ -119,7 +119,7 @@ module OpenAI
       it "test chat completion streaming error with data prefix" do
         client = Client.new(TEST_SECRET)
         WebMock.wrap do
-          WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/completions")
+          WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/completions")
             .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
             .to_return do |req|
               headers = HTTP::Headers.new.merge!({"Content-Type" => "text/event-stream"})
@@ -149,7 +149,7 @@ module OpenAI
       it "test completion streaming rate limit error" do
         client = Client.new(TEST_SECRET)
         WebMock.wrap do
-          WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/completions")
+          WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/completions")
             .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
             .to_return do |req|
               headers = HTTP::Headers.new.merge!({"Content-Type" => "text/event-stream"})
@@ -172,7 +172,7 @@ module OpenAI
       it "test completion streaming broken json" do
         client = Client.new(TEST_SECRET)
         WebMock.wrap do
-          WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/completions")
+          WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/completions")
             .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
             .to_return do |req|
               headers = HTTP::Headers.new.merge!({"Content-Type" => "text/event-stream"})
