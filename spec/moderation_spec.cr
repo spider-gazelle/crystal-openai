@@ -6,7 +6,7 @@ module OpenAI
     it "create moderation" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/moderations")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/moderations")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: MODERATION_RES)
 

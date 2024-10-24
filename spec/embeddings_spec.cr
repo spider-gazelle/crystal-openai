@@ -43,7 +43,7 @@ module OpenAI
     it "test embeddings endpoint with float embeddings" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/embeddings")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/embeddings")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: EMBEDDING_RES)
 
@@ -57,7 +57,7 @@ module OpenAI
     it "test embeddings endpoint with base64 embeddings" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/embeddings")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/embeddings")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: EMBEDDING_RES_B64)
 

@@ -6,7 +6,7 @@ module OpenAI
     it "Returns a list of models" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:get, "#{OPENAI_API_DEFUALT_URL}/models")
+        WebMock.stub(:get, "#{OPENAI_API_DEFAULT_URL}/models")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: MODELS_SAMPLE)
 
@@ -17,7 +17,7 @@ module OpenAI
     it "Returns a model by particular id" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:get, "#{OPENAI_API_DEFUALT_URL}/models/davinci")
+        WebMock.stub(:get, "#{OPENAI_API_DEFAULT_URL}/models/davinci")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: MODEL_SAMPLE)
 
@@ -54,7 +54,7 @@ module OpenAI
     it "Returns a list of engines" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:get, "#{OPENAI_API_DEFUALT_URL}/engines")
+        WebMock.stub(:get, "#{OPENAI_API_DEFAULT_URL}/engines")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: ENGINES_SAMPLE)
 
@@ -65,7 +65,7 @@ module OpenAI
     it "Returns a engine by particular id" do
       client = Client.new(TEST_SECRET)
       WebMock.wrap do
-        WebMock.stub(:get, "#{OPENAI_API_DEFUALT_URL}/engines/davinci")
+        WebMock.stub(:get, "#{OPENAI_API_DEFAULT_URL}/engines/davinci")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return(body: ENGINE_SAMPLE)
 

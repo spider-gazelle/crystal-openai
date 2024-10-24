@@ -7,7 +7,7 @@ module OpenAI
       client = Client.new(TEST_SECRET)
       parts = ["file", "model", "response_format"]
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/audio/transcriptions")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/audio/transcriptions")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return do |req|
             HTTP::FormData.parse(req) do |part|
@@ -26,7 +26,7 @@ module OpenAI
       client = Client.new(TEST_SECRET)
       parts = ["file", "model", "response_format"]
       WebMock.wrap do
-        WebMock.stub(:post, "#{OPENAI_API_DEFUALT_URL}/audio/translations")
+        WebMock.stub(:post, "#{OPENAI_API_DEFAULT_URL}/audio/translations")
           .with(headers: {"Authorization" => "Bearer #{TEST_SECRET}"})
           .to_return do |req|
             HTTP::FormData.parse(req) do |part|
