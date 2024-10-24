@@ -69,7 +69,7 @@ module OpenAI
 
   # Enumerates the models which can be used to generate Embedding vectors.
   enum EmbeddingModel
-    Uknown
+    Unknown
 
     # Deprecated: Will be shut down on January 04, 2024. Use `AdaEmbeddingV2` instead
     AdaSimilarity
@@ -114,7 +114,7 @@ module OpenAI
     end
 
     def to_s
-      raise OpenAIError.new("Unkonwn embedding model received. #{self}") if self == Uknown
+      raise OpenAIError.new("Unkonwn embedding model received. #{self}") if self == Unknown
       OpenAI.em_2_text[self]
     end
   end

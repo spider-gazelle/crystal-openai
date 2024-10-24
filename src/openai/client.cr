@@ -361,7 +361,7 @@ module OpenAI
       if res = res_err.error
         raise APIError.new(resp.status_code, res)
       else
-        raise OpenAIError.new("Uknown error received from server")
+        raise OpenAIError.new("Unknown error received from server")
       end
     end
   end
