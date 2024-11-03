@@ -4,7 +4,7 @@ require "file"
 
 module OpenAI
   # Whisper response formats. Whisper uses JSON format by default
-  enum AudioRespFormat
+  enum TranscriptionRespFormat
     JSON
     TEXT
     SRT
@@ -16,8 +16,8 @@ module OpenAI
     end
   end
 
-  # AudioRequest represents a request structure for audio API
-  class AudioRequest
+  # TranscriptionRequest represents a request structure for audio API
+  class TranscriptionRequest
     include JSON::Serializable
 
     # The audio file object to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
@@ -31,7 +31,7 @@ module OpenAI
     property prompt : String?
 
     # The format of the transcript output, in one of these options: json, text, srt, verbose_json, or vtt.
-    property response_format : AudioRespFormat
+    property response_format : TranscriptionRespFormat
 
     # The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it
     # more focused and deterministic. If set to 0, the model will use log probability to automatically increase the temperature until certain thresholds are hit.
@@ -40,7 +40,7 @@ module OpenAI
     # The language of the input audio. Supplying the input language in ISO-639-1 format will improve accuracy and latency.
     property language : String?
 
-    def initialize(@file, @model = "whisper-1", @prompt = nil, @response_format = AudioRespFormat::JSON, @temperature = 0.0, @language = nil)
+    def initialize(@file, @model = "whisper-1", @prompt = nil, @response_format = TranscriptionRespFormat::JSON, @temperature = 0.0, @language = nil)
     end
 
     def build_metada(builder : HTTP::FormData::Builder)
@@ -65,7 +65,7 @@ module OpenAI
     include JSON::Serializable
   end
 
-  record AudioResponse, task : String?, language : String?, duration : Float64?, segments : Array(Segment)?, text : String? do
+  record TranscriptionResponse, task : String?, language : String?, duration : Float64?, segments : Array(Segment)?, text : String? do
     include JSON::Serializable
   end
 end

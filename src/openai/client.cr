@@ -36,15 +36,15 @@ module OpenAI
     #######################
 
     # API call to transcribe audio into the input language.
-    def transcription(req : AudioRequest) : AudioResponse
-      multipart_api("/audio/transcriptions", req.model.to_s, AudioResponse) { |builder|
+    def transcription(req : TranscriptionRequest) : TranscriptionResponse
+      multipart_api("/audio/transcriptions", req.model.to_s, TranscriptionResponse) { |builder|
         req.build_metada(builder)
       }
     end
 
     # API call to translate audio into English.
-    def translation(req : AudioRequest) : AudioResponse
-      multipart_api("/audio/translations", req.model.to_s, AudioResponse) { |builder|
+    def translation(req : TranscriptionRequest) : TranscriptionResponse
+      multipart_api("/audio/translations", req.model.to_s, TranscriptionResponse) { |builder|
         req.build_metada(builder)
       }
     end
