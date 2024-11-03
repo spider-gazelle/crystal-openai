@@ -16,7 +16,7 @@ module OpenAI
             HTTP::Client::Response.new(200, body: AUDIO_RES)
           end
 
-        req = AudioRequest.new(AUDIO_SAMPLE)
+        req = TranscriptionRequest.new(AUDIO_SAMPLE)
         res = client.transcription(req)
         res.text.should_not be_nil
       end
@@ -35,7 +35,7 @@ module OpenAI
             HTTP::Client::Response.new(200, body: AUDIO_RES)
           end
 
-        req = AudioRequest.new(AUDIO_SAMPLE)
+        req = TranscriptionRequest.new(AUDIO_SAMPLE)
         res = client.translation(req)
         res.text.should_not be_nil
       end
