@@ -114,7 +114,7 @@ module OpenAI
     end
 
     def to_s
-      raise OpenAIError.new("Unkonwn embedding model received. #{self}") if self == Unknown
+      raise OpenAIError.new("Unknown embedding model received. #{self}") if self == Unknown
       OpenAI.em_2_text[self]
     end
   end
