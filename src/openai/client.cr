@@ -23,8 +23,22 @@ module OpenAI
       end
     end
 
+    # Original signature — keeps backward compatibility
     def self.new(api_key : String? = nil, proxy : ProxyConfig? = nil)
       new(Config.default(api_key, proxy))
+    end
+
+    # Overload with explicit api_base (key always optional when api_base is provided)
+    def self.new(api_key : String?, api_base : String, proxy : ProxyConfig? = nil)
+      key = api_key || ""
+      type = ApiType.detect(api_base)
+      config = if type.azure?
+                 Config.new(key, api_base, ORGANIZATION, type, AZURE_API_VERSION,
+                   model_mapper: ->(str : String) { str.gsub(/[.:]/, "") }, proxy: proxy)
+               else
+                 Config.new(key, api_base, ORGANIZATION, type, proxy: proxy)
+               end
+      new(config)
     end
 
     def self.azure(api_key : String?, api_endpoint : String, proxy : ProxyConfig? = nil)
@@ -57,7 +71,6 @@ module OpenAI
     def chat_completion(req : ChatCompletionRequest) : ChatCompletionResponse
       raise OpenAIError.new("streaming is not supported with this method, please use `#chat_completion_stream`") if req.stream
       suffix = "/chat/completions"
-      raise OpenAIError.new("model '#{req.model}' is not supported with this method, please use `#completion` method instead") unless OpenAI.endpoint_supports_model?(suffix, req.model)
 
       req = new_request("POST", instance_url(suffix, req.model)) { |arg| arg.body = req.to_json }
       send_request(req, ChatCompletionResponse)
@@ -68,7 +81,6 @@ module OpenAI
     # stream terminated by a data: [DONE] message.
     def chat_completion_stream(req : ChatCompletionRequest) : ChatCompletionStream
       suffix = "/chat/completions"
-      raise OpenAIError.new("model '#{req.model}' is not supported with this method, please use `#completion` method instead") unless OpenAI.endpoint_supports_model?(suffix, req.model)
 
       req.stream = true
       req = new_request("POST", instance_url(suffix, req.model)) { |arg| arg.body = req.to_json }
@@ -87,7 +99,6 @@ module OpenAI
     def completion(req : CompletionRequest) : CompletionResponse
       raise OpenAIError.new("streaming is not supported with this method, please use `#completion_stream`") if req.stream
       suffix = "/completions"
-      raise OpenAIError.new("model '#{req.model}' is not supported with this method, please use `#chat_completion` method instead") unless OpenAI.endpoint_supports_model?(suffix, req.model)
 
       req = new_request("POST", instance_url(suffix, req.model)) { |arg| arg.body = req.to_json }
       send_request(req, CompletionResponse)
@@ -99,7 +110,6 @@ module OpenAI
     # stream terminated by a data: [DONE] message.
     def completion_stream(req : CompletionRequest) : CompletionStream
       suffix = "/completions"
-      raise OpenAIError.new("model '#{req.model}' is not supported with this method, please use `#chat_completion` method instead") unless OpenAI.endpoint_supports_model?(suffix, req.model)
 
       req.stream = true
       req = new_request("POST", instance_url(suffix, req.model)) { |arg| arg.body = req.to_json }

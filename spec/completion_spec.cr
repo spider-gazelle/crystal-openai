@@ -4,14 +4,6 @@ require "./spec_helper"
 
 module OpenAI
   describe "OpenAI::Completion" do
-    it "should raise when attempting completion with wrong model" do
-      config = Client::Config.new(TEST_SECRET, "http://localhost/v1")
-      client = Client.new(config)
-      req = CompletionRequest.new(GPT3Dot5Turbo, max_tokens: 5)
-      expect_raises(OpenAIError, "is not supported with this method, please use `#chat_completion` method instead") do
-        client.completion(req)
-      end
-    end
     it "should raise when attempting completion with streaming enabled" do
       config = Client::Config.new(TEST_SECRET, "http://localhost/v1")
       client = Client.new(config)
@@ -36,16 +28,6 @@ module OpenAI
     end
 
     describe "streaming" do
-      it "should raise when attempting completion streaming with wrong model" do
-        config = Client::Config.new(TEST_SECRET, "http://localhost/v1")
-        client = Client.new(config)
-        req = CompletionRequest.new(GPT3Dot5Turbo)
-        req.max_tokens = 5
-        expect_raises(OpenAIError, "is not supported with this method, please use `#chat_completion` method instead") do
-          client.completion_stream(req)
-        end
-      end
-
       it "test completion streaming" do
         client = Client.new(TEST_SECRET)
         expected_resp = [
@@ -105,7 +87,7 @@ module OpenAI
               HTTP::Client::Response.new(200, body: CHAT_COMPLETION_STREAM_ERROR + "\n", headers: headers)
             end
 
-          req = CompletionRequest.new(GPT3Ada)
+          req = CompletionRequest.new("ada")
           req.max_tokens = 5
           req.stream = true
 
@@ -135,7 +117,7 @@ module OpenAI
               HTTP::Client::Response.new(200, body: data, headers: headers)
             end
 
-          req = CompletionRequest.new(GPT3Ada)
+          req = CompletionRequest.new("ada")
           req.max_tokens = 5
           req.stream = true
 
@@ -160,7 +142,7 @@ module OpenAI
               HTTP::Client::Response.new(200, body: CHAT_COMPLETION_RATELIMIT_ERROR + "\n", headers: headers)
             end
 
-          req = CompletionRequest.new(GPT3Ada, max_tokens: 5, stream: true)
+          req = CompletionRequest.new("ada", max_tokens: 5, stream: true)
 
           stream = client.completion_stream(req)
           expect_raises(OpenAIError, "sending requests too quickly") do

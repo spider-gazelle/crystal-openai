@@ -8,7 +8,7 @@ end
 client = OpenAI::Client.new
 
 resp = client.completion(OpenAI::CompletionRequest.new(
-  model: OpenAI::GPT3Ada,
+  model: "ada",
   max_tokens: 7,
   prompt: "Say this is a test"
 ))

@@ -1,6 +1,6 @@
 # Crystal OpenAI
 
-Unofficial Crystal language shard for [OpenAI API](https://platform.openai.com/) and **Microsoft Azure Endpoints**. Shard supports: 
+Unofficial Crystal language shard for [OpenAI API](https://platform.openai.com/), **Microsoft Azure**, and any **OpenAI-compatible endpoint** (Ollama, vLLM, local proxies, etc.). Supports: 
 
 - ChatGPT
 - GPT-3, GPT-4
@@ -44,22 +44,30 @@ You can configure the environment using the following variables:
 
 * `OPENAI_API_KEY`: API Key. Alternatively, you can configure the following environment variable if you have stored your API key in a Kubernetes secret or some other file storage.
 * `OPENAI_API_KEY_PATH` : Path to the file containing the API Key. This is primarily used when you have configured your key via a Kubernetes secret.
-* `OPENAI_API_BASE`: Base Endpoint URL of the API. For OpenAI, this will default to the OpenAI official link. For Azure endpoints, you will need to either configure this variable or configure it via code.
+* `OPENAI_API_BASE`: Base Endpoint URL of the API. Defaults to OpenAI's official URL. Set this for Azure or any compatible endpoint.
 
 > Note: Refer to [constants.cr](src/constants.cr) for more environment configuration variables.
 
-`OpenAI::Client` is the main entry point you will use to invoke OpenAI endpoints.
+`OpenAI::Client` is the main entry point for all endpoints. Provider type is auto-detected from the URL.
 
 ```crystal
-  # If you have set `OPENAI_API_KEY` env var
+  # Using env vars only — works with OpenAI, Azure, or any compatible endpoint
   client = OpenAI::Client.new
 
-  # If you prefer to configure via code
-  client = OpenAI::Client.new(YOUR-OPENAPI-API-KEY)
+  # OpenAI — explicit config
+  client = OpenAI::Client.new(API_KEY)
 
-  # For Azure endpoints
-  client = OpenAI::Client.azure(....)
+  # Azure — auto-detected from URL
+  client = OpenAI::Client.new(API_KEY, api_base: AZURE_ENDPOINT)
+
+  # Third-party (Ollama, vLLM, etc.) — no key needed
+  client = OpenAI::Client.new(api_base: "http://localhost:11434/v1")
+
+  # Or use explicit Azure factory
+  client = OpenAI::Client.azure(API_KEY, AZURE_ENDPOINT)
 ```
+
+> Switching between providers requires only changing the `api_base` or env vars — no code changes needed.
 
 > **Note**: **`....`** is not a syntax; it refers to the details that need to be provided before invoking these functions.
 
@@ -253,8 +261,11 @@ Or you can configure Proxy options via code
   # or
   client = OpenAI::Client.new(API_KEY, proxy: proxy)
 
-  # or for azure endpoint
+  # or for Azure endpoint
   client = OpenAI::Client.azure(API_KEY, AZURE_ENDPOINT, proxy: proxy)
+
+  # or for any compatible endpoint
+  client = OpenAI::Client.new(API_KEY, api_base: ENDPOINT, proxy: proxy)
 ```
 
 ### Running examples
@@ -287,6 +298,9 @@ As mentioned above, you can refer to [examples/function_call.cr](examples/functi
 
 ### Why am I getting connection timeouts?
 Make sure that OpenAI is available in your country.
+
+### Does this support non-OpenAI endpoints (Ollama, vLLM, etc.)?
+Yes. Set `OPENAI_API_BASE` or pass `api_base` to `Client.new`. The provider is auto-detected from the URL — Azure endpoints are detected automatically, everything else uses standard OpenAI-compatible routing.
 
 ## Deprecated Endpoints
 OpenAI has deprecated engine-based endpoints in favor of model-based endpoints. 

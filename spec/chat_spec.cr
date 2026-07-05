@@ -4,15 +4,6 @@ require "./spec_helper"
 
 module OpenAI
   describe "OpenAI::ChatCompletion" do
-    it "should raise when attempting chat completion with wrong model" do
-      config = Client::Config.new(TEST_SECRET, "http://localhost/v1")
-      client = Client.new(config)
-      req = ChatCompletionRequest.new("ada", [ChatMessage.new(:user, "Hello")])
-      req.max_tokens = 5
-      expect_raises(OpenAIError, "model 'ada' is not supported with this method, please use `#completion` method instead") do
-        client.chat_completion(req)
-      end
-    end
     it "should raise when attempting chat completion with streaming enabled" do
       config = Client::Config.new(TEST_SECRET, "http://localhost/v1")
       client = Client.new(config)
@@ -81,6 +72,19 @@ module OpenAI
       end
     end
 
+    it "should return valid chat completion response on third-party compatible endpoint" do
+      client = Client.new(nil, "http://localhost:11434/v1")
+      WebMock.wrap do
+        WebMock.stub(:post, "http://localhost:11434/v1/chat/completions")
+          .to_return(body: CHAT_COMPLETION_RES)
+
+        req = ChatCompletionRequest.from_json(CHAT_COMPLETION_REQ)
+        res = client.chat_completion(req)
+        res.id.should eq("chatcmpl-123")
+        res.choices.size.should eq(1)
+      end
+    end
+
     it "should return valid chat completion response on azure calls" do
       client = Client.azure(TEST_SECRET, AZURE_SAMPLE_EP)
       WebMock.wrap do
@@ -96,16 +100,6 @@ module OpenAI
     end
 
     describe "streaming" do
-      it "should raise when attempting chat completion streaming with wrong model" do
-        config = Client::Config.new(TEST_SECRET, "http://localhost/v1")
-        client = Client.new(config)
-        req = ChatCompletionRequest.new("ada", [ChatMessage.new(:user, "Hello")])
-        req.max_tokens = 5
-        expect_raises(OpenAIError, "model 'ada' is not supported with this method, please use `#completion` method instead") do
-          client.chat_completion_stream(req)
-        end
-      end
-
       it "test chat completion streaming" do
         client = Client.new(TEST_SECRET)
         expected_resp = [

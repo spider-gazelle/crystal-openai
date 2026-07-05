@@ -4,17 +4,29 @@ module OpenAI
   enum ApiType
     Azure
     OpenAI
-    AzureAD
 
     def azure?
-      [Azure, AzureAD].includes?(self)
+      self == Azure
+    end
+
+    def open_ai?
+      self == OpenAI
     end
 
     def to_header(key : String) : Tuple(String, String)
-      if [OpenAI, AzureAD].includes?(self)
+      if self == OpenAI
         {"Authorization", "Bearer #{key}"}
       else
         {AZURE_API_HEADER, key}
+      end
+    end
+
+    def self.detect(api_base : String) : self
+      uri = URI.parse(api_base)
+      if uri.host =~ /\.?(openai\.azure|cognitiveservices\.azure)\.com$/
+        Azure
+      else
+        OpenAI
       end
     end
 
@@ -48,7 +60,14 @@ module OpenAI
 
       def self.default(api_key : String? = nil, proxy = nil)
         key = api_key || OpenAI.default_apikey
-        new(key, API_BASE || OPENAI_API_DEFAULT_URL, ORGANIZATION, :open_ai, proxy: proxy)
+        base = API_BASE || OPENAI_API_DEFAULT_URL
+        type = ApiType.detect(base)
+        if type.azure?
+          new(key, base, ORGANIZATION, type, AZURE_API_VERSION,
+            model_mapper: ->(str : String) { str.gsub(/[.:]/, "") }, proxy: proxy)
+        else
+          new(key, base, ORGANIZATION, type, proxy: proxy)
+        end
       end
 
       def self.azure(api_key : String?, api_base : String?, api_type : ApiType = :azure, model_mapper : Proc(String, String)? = nil, proxy = nil)
